@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বিডি নিউজ হাব — সকল টিভি ও পত্রিকা</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1115;
+    --card:#171a21;
+    --card2:#1d212b;
+    --green:#00a859;
+    --green-d:#00d96a;
+    --red:#e63946;
+    --gold:#f2c14e;
+    --text:#eef1f5;
+    --muted:#8a93a3;
+    --border:#262b36;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Noto Sans Bengali','Segoe UI',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    padding-bottom:90px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#00592c,#00a859 60%,#00c264);
+    padding:18px 16px 16px;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(circle at 85% 0%, rgba(255,255,255,.15), transparent 50%);
+  }
+  .brand{display:flex;align-items:center;gap:10px;position:relative;z-index:1;}
+  .brand-icon{
+    font-size:26px;background:rgba(255,255,255,.18);
+    width:42px;height:42px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brand h1{font-size:19px;font-weight:800;letter-spacing:.3px;}
+  .brand p{font-size:11px;color:rgba(255,255,255,.85);margin-top:2px;}
+  .clock{
+    position:relative;z-index:1;margin-top:12px;
+    font-size:12px;color:rgba(255,255,255,.9);
+    display:flex;align-items:center;gap:6px;
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:#ff5d5d;animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+  /* SEARCH */
+  .search-wrap{padding:14px 16px 6px;}
+  .search-box{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;display:flex;align-items:center;gap:8px;
+    padding:11px 14px;
+  }
+  .search-box input{
+    background:none;border:none;outline:none;color:var(--text);
+    font-family:inherit;font-size:14px;width:100%;
+  }
+  .search-box input::placeholder{color:var(--muted);}
+
+  /* STICKY TABS */
+  .tabs{
+    position:sticky;top:0;z-index:50;
+    background:rgba(15,17,21,.96);
+    backdrop-filter:blur(10px);
+    display:flex;gap:6px;padding:10px 12px;
+    overflow-x:auto;scrollbar-width:none;
+    border-bottom:1px solid var(--border);
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;display:flex;align-items:center;gap:6px;
+    padding:8px 14px;border-radius:20px;font-size:13px;font-weight:600;
+    background:var(--card);color:var(--muted);border:1px solid var(--border);
+    white-space:nowrap;cursor:pointer;transition:.15s;
+  }
+  .tab.active{
+    background:var(--green);color:#fff;border-color:var(--green);
+  }
+
+  main{padding:14px 14px 0;}
+  .section-title{
+    font-size:14px;font-weight:700;margin:18px 4px 10px;
+    display:flex;align-items:center;gap:6px;color:var(--gold);
+  }
+  .section-title:first-child{margin-top:4px;}
+
+  /* NEWS LIST */
+  .news-feed-select{
+    display:flex;gap:6px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none;
+  }
+  .news-feed-select::-webkit-scrollbar{display:none;}
+  .feed-chip{
+    flex:0 0 auto;padding:6px 12px;border-radius:16px;font-size:12px;font-weight:600;
+    background:var(--card2);border:1px solid var(--border);color:var(--muted);cursor:pointer;
+  }
+  .feed-chip.active{background:var(--gold);color:#1a1400;border-color:var(--gold);}
+
+  .news-item{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:13px 14px;margin-bottom:10px;
+    display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--text);
+  }
+  .news-item:active{background:var(--card2);}
+  .news-src{
+    font-size:11px;color:var(--green-d);font-weight:700;display:flex;align-items:center;gap:5px;
+  }
+  .news-title{font-size:14.5px;font-weight:600;line-height:1.5;}
+  .news-time{font-size:11px;color:var(--muted);}
+  .news-state{
+    text-align:center;padding:30px 10px;color:var(--muted);font-size:13px;
+  }
+  .spinner{
+    width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--green);
+    border-radius:50%;margin:0 auto 10px;animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .retry-btn{
+    margin-top:10px;background:var(--green);color:#fff;border:none;
+    padding:7px 16px;border-radius:10px;font-size:12px;font-weight:700;
+  }
+
+  /* DIRECTORY GRID */
+  .grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  }
+  .site-card{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:12px 12px;display:flex;flex-direction:column;gap:8px;
+    text-decoration:none;color:var(--text);position:relative;
+  }
+  .site-card:active{background:var(--card2);}
+  .site-top{display:flex;align-items:center;gap:9px;}
+  .site-emoji{
+    font-size:17px;width:34px;height:34px;border-radius:9px;
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  }
+  .site-name{font-size:13px;font-weight:700;line-height:1.3;}
+  .site-tag{font-size:10px;color:var(--muted);}
+  .badge{
+    position:absolute;top:8px;left:8px;font-size:9px;font-weight:800;
+    padding:2px 6px;border-radius:6px;
+  }
+  .badge.tv{background:rgba(230,57,70,.15);color:#ff8a93;}
+  .badge.paper{background:rgba(0,168,89,.15);color:var(--green-d);}
+  .badge.eng{background:rgba(242,193,78,.15);color:var(--gold);}
+
+  /* BOTTOM NAV */
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;right:0;z-index:60;
+    background:rgba(20,23,29,.97);backdrop-filter:blur(12px);
+    border-top:1px solid var(--border);
+    display:flex;justify-content:space-around;padding:8px 4px 10px;
+  }
+  .nav-btn{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    color:var(--muted);font-size:10.5px;font-weight:600;background:none;border:none;
+    flex:1;padding:4px 0;
+  }
+  .nav-btn .ic{font-size:19px;}
+  .nav-btn.active{color:var(--green-d);}
+
+  .hidden{display:none !important;}
+  a{cursor:pointer;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">📰</div>
+    <div>
+      <h1>বিডি নিউজ হাব</h1>
+      <p>সকল বাংলাদেশী টিভি ও পত্রিকা এক জায়গায়</p>
+    </div>
+  </div>
+  <div class="clock"><span class="live-dot"></span><span id="liveClock">লাইভ আপডেট</span></div>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <span>🔍</span>
+    <input id="searchInput" type="text" placeholder="পত্রিকা, চ্যানেল বা খবর খুঁজুন...">
+  </div>
+</div>
+
+<div class="tabs" id="tabBar">
+  <div class="tab active" data-tab="news">📡 সর্বশেষ খবর</div>
+  <div class="tab" data-tab="papers-bn">📰 বাংলা পত্রিকা</div>
+  <div class="tab" data-tab="papers-en">🗞️ ইংরেজি পত্রিকা</div>
+  <div class="tab" data-tab="tv">📺 টিভি চ্যানেল</div>
+  <div class="tab" data-tab="agency">🌐 নিউজ এজেন্সি</div>
+</div>
+
+<main>
+
+  <!-- LIVE NEWS PANEL -->
+  <section id="panel-news">
+    <div class="news-feed-select" id="feedChips"></div>
+    <div id="newsList"><div class="news-state"><div class="spinner"></div>খবর লোড হচ্ছে...</div></div>
+  </section>
+
+  <!-- BANGLA PAPERS -->
+  <section id="panel-papers-bn" class="hidden">
+    <div class="section-title">📰 বাংলা দৈনিক পত্রিকা</div>
+    <div class="grid" id="grid-papers-bn"></div>
+  </section>
+
+  <!-- ENGLISH PAPERS -->
+  <section id="panel-papers-en" class="hidden">
+    <div class="section-title">🗞️ ইংরেজি দৈনিক পত্রিকা</div>
+    <div class="grid" id="grid-papers-en"></div>
+  </section>
+
+  <!-- TV -->
+  <section id="panel-tv" class="hidden">
+    <div class="section-title">📺 টেলিভিশন চ্যানেল</div>
+    <div class="grid" id="grid-tv"></div>
+  </section>
+
+  <!-- AGENCY -->
+  <section id="panel-agency" class="hidden">
+    <div class="section-title">🌐 নিউজ এজেন্সি ও অন্যান্য</div>
+    <div class="grid" id="grid-agency"></div>
+  </section>
+
+</main>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" data-go="news"><span class="ic">📡</span>খবর</button>
+  <button class="nav-btn" data-go="papers-bn"><span class="ic">📰</span>বাংলা</button>
+  <button class="nav-btn" data-go="papers-en"><span class="ic">🗞️</span>ইংরেজি</button>
+  <button class="nav-btn" data-go="tv"><span class="ic">📺</span>টিভি</button>
+  <button class="nav-btn" data-go="agency"><span class="ic">🌐</span>এজেন্সি</button>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const PAPERS_BN = [
+  {name:"প্রথম আলো", url:"https://www.prothomalo.com", emoji:"📰", rss:"https://www.prothomalo.com/feed"},
+  {name:"কালের কণ্ঠ", url:"https://www.kalerkantho.com", emoji:"📰", rss:"https://www.kalerkantho.com/rss.xml"},
+  {name:"যুগান্তর", url:"https://www.jugantor.com", emoji:"📰", rss:"https://www.jugantor.com/rss.xml"},
+  {name:"সমকাল", url:"https://samakal.com", emoji:"📰", rss:"https://samakal.com/rss/rss.xml"},
+  {name:"ইত্তেফাক", url:"https://www.ittefaq.com.bd", emoji:"📰", rss:"https://www.ittefaq.com.bd/rss.xml"},
+  {name:"বাংলাদেশ প্রতিদিন", url:"https://www.bd-pratidin.com", emoji:"📰", rss:"https://www.bd-pratidin.com/rss.xml"},
+  {name:"মানবজমিন", url:"https://www.mzamin.com", emoji:"📰", rss:""},
+  {name:"নয়া দিগন্ত", url:"https://www.dailynayadiganta.com", emoji:"📰", rss:"https://www.dailynayadiganta.com/rss.xml"},
+  {name:"আমাদের সময়", url:"https://www.dainikamadershomoy.com", emoji:"📰", rss:""},
+  {name:"ভোরের কাগজ", url:"https://www.bhorerkagoj.com", emoji:"📰", rss:""},
+  {name:"জনকণ্ঠ", url:"https://www.dailyjanakantha.com", emoji:"📰", rss:""},
+  {name:"সংবাদ", url:"https://sangbad.net.bd", emoji:"📰", rss:""},
+  {name:"আজকের পত্রিকা", url:"https://www.ajkerpatrika.com", emoji:"📰", rss:"https://www.ajkerpatrika.com/feed/"},
+  {name:"দেশ রূপান্তর", url:"https://www.deshrupantor.com", emoji:"📰", rss:""},
+  {name:"বণিক বার্তা", url:"https://www.bonikbarta.net", emoji:"📰", rss:""},
+  {name:"আজকালের খবর", url:"https://www.ajkalerkhobor.net", emoji:"📰", rss:""},
+  {name:"বিডিনিউজ২৪ (বাংলা)", url:"https://bangla.bdnews24.com", emoji:"📰", rss:"https://bangla.bdnews24.com/?widgetName=rssfeed&widgetId=1145&getXmlFeed=true"},
+  {name:"বিবিসি বাংলা", url:"https://www.bbc.com/bengali", emoji:"🌍", rss:"https://feeds.bbci.co.uk/bengali/rss.xml"},
+  {name:"ভয়েস অব আমেরিকা বাংলা", url:"https://www.voabangla.com", emoji:"🌍", rss:""},
+  {name:"ডয়চে ভেলে বাংলা", url:"https://www.dw.com/bn", emoji:"🌍", rss:""},
+];
+
+const PAPERS_EN = [
+  {name:"The Daily Star", url:"https://www.thedailystar.net", emoji:"🗞️", rss:"https://www.thedailystar.net/rss.xml"},
+  {name:"Dhaka Tribune", url:"https://www.dhakatribune.com", emoji:"🗞️", rss:"https://www.dhakatribune.com/feed"},
+  {name:"The Financial Express", url:"https://thefinancialexpress.com.bd", emoji:"🗞️", rss:""},
+  {name:"New Age", url:"https://www.newagebd.net", emoji:"🗞️", rss:"https://www.newagebd.net/rss/rss.xml"},
+  {name:"bdnews24.com", url:"https://bdnews24.com", emoji:"🗞️", rss:"https://bdnews24.com/?widgetName=rssfeed&widgetId=1145&getXmlFeed=true"},
+  {name:"The Business Standard", url:"https://www.tbsnews.net", emoji:"🗞️", rss:"https://www.tbsnews.net/rss.xml"},
+  {name:"The Independent BD", url:"https://www.theindependentbd.com", emoji:"🗞️", rss:""},
+  {name:"United News of Bangladesh", url:"https://unb.com.bd", emoji:"🗞️", rss:"https://unb.com.bd/rss.xml"},
+  {name:"Daily Sun", url:"https://www.daily-sun.com", emoji:"🗞️", rss:""},
+  {name:"Observer BD", url:"https://www.observerbd.com", emoji:"🗞️", rss:""},
+];
+
+const TV = [
+  {name:"বিটিভি (BTV)", url:"http://www.btv.gov.bd", emoji:"📺"},
+  {name:"চ্যানেল আই", url:"https://www.channelionline.com", emoji:"📺"},
+  {name:"এনটিভি", url:"https://www.ntvbd.com", emoji:"📺"},
+  {name:"আরটিভি", url:"https://www.rtvonline.com", emoji:"📺"},
+  {name:"সময় টিভি", url:"https://www.somoynews.tv", emoji:"📺"},
+  {name:"যমুনা টিভি", url:"https://jamuna.tv", emoji:"📺"},
+  {name:"একাত্তর টিভি", url:"https://ekattor.tv", emoji:"📺"},
+  {name:"ইনডিপেন্ডেন্ট টিভি", url:"https://independent24.com", emoji:"📺"},
+  {name:"ডিবিসি নিউজ", url:"https://dbcnews.tv", emoji:"📺"},
+  {name:"চ্যানেল ২৪", url:"https://www.channel24bd.tv", emoji:"📺"},
+  {name:"মোহনা টিভি", url:"https://mohonatv.com", emoji:"📺"},
+  {name:"বৈশাখী টিভি", url:"https://www.boishakhi.tv", emoji:"📺"},
+  {name:"এটিএন বাংলা", url:"https://www.atnbangla.tv", emoji:"📺"},
+  {name:"এটিএন নিউজ", url:"https://www.atnnewstv.com", emoji:"📺"},
+  {name:"এশিয়ান টিভি", url:"https://www.asiantvbd.tv", emoji:"📺"},
+  {name:"জিটিভি (গাজী টিভি)", url:"https://www.gazitv.com", emoji:"📺"},
+  {name:"মাছরাঙা টেলিভিশন", url:"https://maasranga.tv", emoji:"📺"},
+  {name:"মাই টিভি", url:"https://mytvbd.tv", emoji:"📺"},
+  {name:"বাংলা টিভি", url:"https://banglatv.tv", emoji:"📺"},
+  {name:"দেশ টিভি", url:"https://deshtvbd.com", emoji:"📺"},
+  {name:"নিউজ ২৪", url:"https://news24bd.tv", emoji:"📺"},
+  {name:"বাংলাভিশন", url:"https://www.banglavision.tv", emoji:"📺"},
+  {name:"দীপ্ত টিভি", url:"https://www.deeptotv.com", emoji:"📺"},
+  {name:"এসএটিভি", url:"https://satv.tv", emoji:"📺"},
+  {name:"গান বাংলা", url:"https://gaanbangla.tv", emoji:"📺"},
+  {name:"দুরন্ত টিভি", url:"https://duronto.tv", emoji:"📺"},
+];
+
+const AGENCY = [
+  {name:"বাসস (BSS)", url:"http://www.bssnews.net", emoji:"🌐"},
+  {name:"ইউএনবি (UNB)", url:"https://unb.com.bd", emoji:"🌐"},
+  {name:"নিউএজ এজেন্সি", url:"https://www.newsbangla24.com", emoji:"🌐"},
+  {name:"যায়যায়দিন", url:"https://www.jaijaidinbd.com", emoji:"🌐"},
+  {name:"আমার দেশ", url:"https://www.amardesh.com", emoji:"🌐"},
+  {name:"ঢাকা পোস্ট", url:"https://www.dhakapost.com", emoji:"🌐"},
+  {name:"জাগো নিউজ ২৪", url:"https://www.jagonews24.com", emoji:"🌐"},
+  {name:"বাংলা ট্রিবিউন", url:"https://www.banglatribune.com", emoji:"🌐"},
+  {name:"রাইজিংবিডি", url:"https://www.risingbd.com", emoji:"🌐"},
+  {name:"সারাবাংলা", url:"https://www.sarabangla.net", emoji:"🌐"},
+  {name:"বার্তা২৪", url:"https://barta24.com", emoji:"🌐"},
+  {name:"নিউজবাংলা২৪", url:"https://www.newsbangla24.com", emoji:"🌐"},
+];
+
+// Feeds used for the live "latest news" tab (only sources with working rss)
+const NEWS_FEEDS = [
+  {key:"all", label:"সব", urls:null},
+  {key:"prothomalo", label:"প্রথম আলো", urls:["https://www.prothomalo.com/feed"]},
+  {key:"bdnews24", label:"বিডিনিউজ২৪", urls:["https://bangla.bdnews24.com/?widgetName=rssfeed&widgetId=1145&getXmlFeed=true"]},
+  {key:"jugantor", label:"যুগান্তর", urls:["https://www.jugantor.com/rss.xml"]},
+  {key:"samakal", label:"সমকাল", urls:["https://samakal.com/rss/rss.xml"]},
+  {key:"ittefaq", label:"ইত্তেফাক", urls:["https://www.ittefaq.com.bd/rss.xml"]},
+  {key:"bdpratidin", label:"বাংলাদেশ প্রতিদিন", urls:["https://www.bd-pratidin.com/rss.xml"]},
+  {key:"dhakatribune", label:"Dhaka Tribune", urls:["https://www.dhakatribune.com/feed"]},
+  {key:"dailystar", label:"Daily Star", urls:["https://www.thedailystar.net/rss.xml"]},
+  {key:"bbcbangla", label:"BBC বাংলা", urls:["https://feeds.bbci.co.uk/bengali/rss.xml"]},
+];
+
+/* ================= RENDER DIRECTORIES ================= */
+function cardHTML(item, badgeClass, badgeText){
+  return `<a class="site-card" href="${item.url}" target="_blank" rel="noopener">
+    <span class="badge ${badgeClass}">${badgeText}</span>
+    <div class="site-top">
+      <div class="site-emoji">${item.emoji}</div>
+    </div>
+    <div class="site-name">${item.name}</div>
+    <div class="site-tag">ওয়েবসাইট দেখুন →</div>
+  </a>`;
+}
+function renderGrid(id, items, badgeClass, badgeText){
+  document.getElementById(id).innerHTML = items.map(i=>cardHTML(i,badgeClass,badgeText)).join("");
+}
+renderGrid("grid-papers-bn", PAPERS_BN, "paper", "পত্রিকা");
+renderGrid("grid-papers-en", PAPERS_EN, "eng", "ENGLISH");
+renderGrid("grid-tv", TV, "tv", "টিভি");
+renderGrid("grid-agency", AGENCY, "paper", "এজেন্সি");
+
+/* ================= TABS ================= */
+const tabs = document.querySelectorAll(".tab");
+const navBtns = document.querySelectorAll(".nav-btn");
+function showTab(key){
+  ["news","papers-bn","papers-en","tv","agency"].forEach(k=>{
+    document.getElementById("panel-"+k).classList.toggle("hidden", k!==key);
+  });
+  tabs.forEach(t=>t.classList.toggle("active", t.dataset.tab===key));
+  navBtns.forEach(b=>b.classList.toggle("active", b.dataset.go===key));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+tabs.forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+navBtns.forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.go)));
+
+/* ================= SEARCH ================= */
+document.getElementById("searchInput").addEventListener("input", e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll(".site-card").forEach(card=>{
+    const name = card.querySelector(".site-name").textContent.toLowerCase();
+    card.style.display = (!q || name.includes(q)) ? "" : "none";
+  });
+});
+
+/* ================= LIVE CLOCK ================= */
+function updateClock(){
+  const now = new Date();
+  const opts = {hour:"2-digit",minute:"2-digit",hour12:true,timeZone:"Asia/Dhaka"};
+  const dopts = {weekday:"long",day:"numeric",month:"long",timeZone:"Asia/Dhaka"};
+  document.getElementById("liveClock").textContent =
+    now.toLocaleDateString("bn-BD", dopts) + " • " + now.toLocaleTimeString("bn-BD", opts);
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+/* ================= NEWS FEED CHIPS ================= */
+const feedChipsEl = document.getElementById("feedChips");
+feedChipsEl.innerHTML = NEWS_FEEDS.map(f=>
+  `<div class="feed-chip ${f.key==='all'?'active':''}" data-key="${f.key}">${f.label}</div>`
+).join("");
+
+let currentFeedKey = "all";
+feedChipsEl.querySelectorAll(".feed-chip").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    feedChipsEl.querySelectorAll(".feed-chip").forEach(c=>c.classList.remove("active"));
+    chip.classList.add("active");
+    currentFeedKey = chip.dataset.key;
+    loadNews();
+  });
+});
+
+/* ================= NEWS LOADING ================= */
+const newsListEl = document.getElementById("newsList");
+
+function fetchWithTimeout(url, ms){
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), ms);
+  return fetch(url, {signal: ctrl.signal}).finally(()=>clearTimeout(t));
+}
+
+function timeAgo(dateStr){
+  const d = new Date(dateStr);
+  if(isNaN(d)) return "";
+  const diffMin = Math.floor((Date.now()-d.getTime())/60000);
+  if(diffMin < 1) return "এখনই";
+  if(diffMin < 60) return diffMin + " মিনিট আগে";
+  const diffHr = Math.floor(diffMin/60);
+  if(diffHr < 24) return diffHr + " ঘণ্টা আগে";
+  return Math.floor(diffHr/24) + " দিন আগে";
+}
+
+function escapeHTML(str){
+  const div = document.createElement("div");
+  div.textContent = str || "";
+  return div.innerHTML;
+}
+
+async function loadNews(){
+  newsListEl.innerHTML = `<div class="news-state"><div class="spinner"></div>খবর লোড হচ্ছে...</div>`;
+
+  try{
+    const res = await fetchWithTimeout(`/api/news?key=${encodeURIComponent(currentFeedKey)}`, 15000);
+    if(!res.ok) throw new Error("bad status");
+    const data = await res.json();
+    const combined = data.items || [];
+
+    if(combined.length === 0){
+      newsListEl.innerHTML = `<div class="news-state">😕 এই মুহূর্তে খবর লোড করা যায়নি।<br><button class="retry-btn" onclick="loadNews()">আবার চেষ্টা করুন</button></div>`;
+      return;
+    }
+    newsListEl.innerHTML = combined.map(item=>`
+      <a class="news-item" href="${item.link}" target="_blank" rel="noopener">
+        <div class="news-src">📡 ${escapeHTML(item.source)}</div>
+        <div class="news-title">${escapeHTML(item.title)}</div>
+        <div class="news-time">${item.pubDate ? timeAgo(item.pubDate) : ""}</div>
+      </a>
+    `).join("");
+  }catch(e){
+    newsListEl.innerHTML = `<div class="news-state">😕 কিছু একটা সমস্যা হয়েছে। ইন্টারনেট চেক করে আবার চেষ্টা করো।<br><button class="retry-btn" onclick="loadNews()">আবার চেষ্টা করুন</button></div>`;
+  }
+}
+
+loadNews();
+setInterval(()=>{ if(currentFeedKey) loadNews(); }, 5*60*1000); // auto-refresh every 5 min
+</script>
+</body>
+</html>
