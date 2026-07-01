@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>পত্রিকা ডিরেক্টরি</title>
+<title>নিউজহাব -  ডিরেক্টরি</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -53,50 +53,62 @@
   }
   ::selection { background: var(--red); color: #fff; }
 
-  /* Masthead */
+  /* Masthead - Space reduced to absolute 0 */
   .masthead {
-    padding: 60px 20px 32px;
-    text-align: center;
+    padding: 12px 20px 0px; /* টপ স্পেস কমিয়ে মিনিমাম এবং বটম স্পেস ০ করা হয়েছে */
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
   }
-  .masthead .eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
+  
+  .masthead-top {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 2px; /* বটম মার্জিন একদম কমিয়ে আনা হয়েছে */
   }
-  .masthead .eyebrow span:nth-child(2) { color: var(--red); font-size: 16px; }
+
   .masthead h1 {
     font-family: 'Tiro Bangla', serif;
-    font-size: 64px;
-    line-height: 1.1;
-    margin: 0 0 12px;
+    font-size: 28px;
+    line-height: 1; /* লাইন হাইট কমিয়ে ১ করা হয়েছে */
+    margin: 0;
     letter-spacing: -0.01em;
     font-weight: 700;
   }
   .masthead h1 em {
     font-style: normal;
     color: var(--red);
-    position: relative;
   }
+
+  .masthead .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    line-height: 1;
+  }
+  .masthead .eyebrow span:nth-child(1) { color: var(--red); font-size: 14px; }
+  
   .masthead .sub {
-    font-size: 17px;
+    font-size: 14px;
     color: var(--ink-soft);
     font-weight: 500;
+    margin: 0; /* সাবটাইটেলের চারপাশের মার্জিন ০ করা হয়েছে */
   }
   .masthead .rules {
-    margin-top: 32px;
+    margin-top: 10px; /* লাইনের উপরের স্পেস কমানো হয়েছে */
+    margin-bottom: 0; /* লাইনের নিচের স্পেস ০ করা হয়েছে */
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--rule) 20%, var(--rule) 80%, transparent);
+    background: linear-gradient(to right, var(--rule) 0%, var(--rule) 80%, transparent 100%);
   }
 
   /* Controls (Sticky Glassmorphism) */
@@ -197,7 +209,7 @@
 
   /* Main Grid UI */
   main {
-    padding: 32px 20px 80px;
+    padding: 24px 20px 80px; /* মেইন গ্রিডের টপ প্যাডিংও কিছুটা সামঞ্জস্য করা হয়েছে */
     max-width: 1200px;
     margin: 0 auto;
   }
@@ -392,9 +404,12 @@
 </head>
 <body>
 
+  <!-- Masthead Section -->
   <div class="masthead">
-    <div class="eyebrow"><span>খবর</span><span>•</span><span id="todayDate"></span></div>
-    <h1>সব <em>পত্রিকা</em> এক সাথে</h1>
+    <div class="masthead-top">
+      <h1><em>নিউজহাব</em></h1>
+      <div class="eyebrow"><span>•</span><span id="todayDate"></span></div>
+    </div>
     <div class="sub">আপনার পছন্দের সব বাংলা সংবাদ মাধ্যম, এক ঠিকানায়।</div>
     <div class="rules"></div>
   </div>
@@ -416,7 +431,6 @@
   <footer>© ২০২৬, সকল অধিকার সংরক্ষিত।</footer>
 
 <script>
-// প্রাথমিক সোর্স লিস্ট (এখানে popular ফিল্ডটি এখন localStorage থেকে ডায়নামিকালি হ্যান্ডেল হবে)
 const INITIAL_SOURCES = [
   {id: "prothomalo", name:"প্রথম আলো", cat:"bangla", url:"https://www.prothomalo.com", popular:true},
   {id: "kalerkantho", name:"কালের কণ্ঠ", cat:"bangla", url:"https://www.kalerkantho.com", popular:true},
@@ -457,7 +471,7 @@ const INITIAL_SOURCES = [
   {id: "maasranga", name:"মাছরাঙা টিভি", cat:"tv", url:"https://maasranga.tv"},
   {id: "banglavision", name:"বাংলাভিশন", cat:"tv", url:"https://www.banglavision.tv"},
 
-  {id: "anandabazar", name:"আনন্দবাজার পত্রিকা", cat:"india", url:"https://www.anandabazar.com", popular:true},
+  {id: "anandabazar", name:"অনন্দবাজার পত্রিকা", cat:"india", url:"https://www.anandabazar.com", popular:true},
   {id: "bartaman", name:"বর্তমান পত্রিকা", cat:"india", url:"https://bartamanpatrika.com", popular:true},
   {id: "eisamay", name:"এই সময়", cat:"india", url:"https://eisamay.com", popular:true},
   {id: "sangbadpratidin", name:"সংবাদ প্রতিদিন", cat:"india", url:"https://www.sangbadpratidin.in", popular:true},
@@ -485,15 +499,12 @@ const CATS = [
   {key:"intl", label:"আন্তর্জাতিক"},
 ];
 
-// localStorage থেকে ইউজারের সেভ করা জনপ্রিয় লিস্ট লোড করা বা ডিফল্ট সেট করা
 let popularList = JSON.parse(localStorage.getItem('popular_newspapers'));
 if (!popularList) {
-  // প্রথমবার ভিজিট করলে কোডের ডিফল্ট popular পত্রিকাগুলোর আইডি সেভ হবে
   popularList = INITIAL_SOURCES.filter(s => s.popular).map(s => s.id);
   localStorage.setItem('popular_newspapers', JSON.stringify(popularList));
 }
 
-// সোর্স ডেটা আপডেট করা (localStorage অনুযায়ী popular প্রোপার্টি ট্রু/ফলস করা)
 let SOURCES = INITIAL_SOURCES.map(s => ({
   ...s,
   popular: popularList.includes(s.id)
@@ -532,22 +543,19 @@ function hostOf(url){
   try{ return new URL(url).hostname.replace('www.',''); }catch(e){ return url; }
 }
 
-// জনপ্রিয় বা আন-পপুলার করার ফাংশন
 function togglePopular(id, event) {
-  event.preventDefault(); // যাতে লিংকে ক্লিক হয়ে নতুন ট্যাব ওপেন না হয়ে যায়
+  event.preventDefault();
   event.stopPropagation();
   
   const index = popularList.indexOf(id);
   if (index > -1) {
-    popularList.splice(index, 1); // বাদ দিন
+    popularList.splice(index, 1);
   } else {
-    popularList.push(id); // যুক্ত করুন
+    popularList.push(id);
   }
   
-  // ব্রাউজারে সেভ করুন
   localStorage.setItem('popular_newspapers', JSON.stringify(popularList));
   
-  // মেইন সোর্স আপডেট করুন
   SOURCES = SOURCES.map(s => ({
     ...s,
     popular: popularList.includes(s.id)
@@ -602,7 +610,6 @@ function renderGrid(items){
         <div class="logo-container">
           <img src="${logoUrl}" alt="${s.name}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%238A8168\' stroke-width=\'2\'><path d=\'M4 4h16v16H4z\'/><path d=\'M12 8v8\'/><path d=\'M8 12h8\' /></svg>'\">
         </div>
-        <!-- স্টার বাটন এখানে যুক্ত করা হয়েছে -->
         <button class="star-btn ${s.popular ? 'active' : ''}" onclick="togglePopular('${s.id}', event)" title="${s.popular ? 'জনপ্রিয় থেকে বাদ দিন' : 'জনপ্রিয়তে যুক্ত করুন'}">
           ★
         </button>
